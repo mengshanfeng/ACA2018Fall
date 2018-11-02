@@ -1,0 +1,164 @@
+# main.py
+import Instruction
+import Mem
+import Reg
+
+
+def init_memory():
+    num = input()
+    # 读取输入的初始内存数据
+    num = num.rstrip('\n')
+    # 删除掉最后的回车
+    a, b, c, d = num.split(',')
+    # 将数据按照逗号分隔
+
+    Mem.Memory[0] = int(a)
+    Mem.Memory[1] = int(b)
+    Mem.Memory[2] = int(c)
+    Mem.Memory[3] = int(d)
+    # 对需要赋初值的单元进行赋值
+    return
+
+
+def get_instruction():
+    while True:
+        t = input()
+        # 读取一行指令
+        if len(t) == 0:
+            break
+        # 判断是否为空串，若空则结束输入
+
+        t = t.rstrip('\r')
+        # 删除每行最后的换行符
+        t = t.replace(',', ' ')
+        # 将每行指令中的逗号换成空格
+        t = t.split(' ')
+        # 将指令和操作数按照逗号分开
+        # print(t)
+
+        Reg.IR.append(t)
+        # 将指令t加入指令寄存器中
+    stop = ['stop']
+    Reg.IR.append(stop)
+    return
+
+
+def run():
+    while True:
+        i = Reg.PC
+        op = Reg.IR[i][0]
+        if op == 'stop':  # 当程序运行至stop标记时，结束运行。
+            break
+        if op == 'lui':
+            Instruction.LUI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2]))
+        elif op == 'auipc':
+            Instruction.AUIPC(int(Reg.IR[i][1][1]), int(Reg.IR[i][2]))
+        elif op == 'jal':
+            Instruction.JAL(int(Reg.IR[i][1][1]), int(Reg.IR[i][2]))
+        elif op == 'jalr':
+            Instruction.JALR(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'beq':
+            Instruction.BEQ(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'bne':
+            Instruction.BNE(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'blt':
+            Instruction.BLT(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'bge':
+            Instruction.BGE(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'bltu':
+            Instruction.BLTU(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'bgeu':
+            Instruction.BGEU(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'lb':
+            Instruction.LB(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'lh':
+            Instruction.LH(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'lw':
+            Instruction.LW(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'lbu':
+            Instruction.LBU(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'lhu':
+            Instruction.LHU(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'sb':
+            Instruction.SB(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'sh':
+            Instruction.SH(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'sw':
+            Instruction.SW(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'addi':
+            Instruction.ADDI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'slti':
+            Instruction.SLTI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'sltiu':
+            Instruction.SLTIU(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'xori':
+            Instruction.XORI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'ori':
+            Instruction.ORI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'andi':
+            Instruction.ANDI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3]))
+        elif op == 'slli':
+            Instruction.SLLI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2]))
+        elif op == 'srli':
+            Instruction.SRLI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2]))
+        elif op == 'srai':
+            Instruction.SRAI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2]))
+        elif op == 'add':
+            Instruction.ADD(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3][1]))
+        elif op == 'sub':
+            Instruction.SUB(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3][1]))
+        elif op == 'slt':
+            Instruction.SLT(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3][1]))
+        elif op == 'sltu':
+            Instruction.SLTU(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3][1]))
+        elif op == 'xor':
+            Instruction.XOR(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3][1]))
+        elif op == 'or':
+            Instruction.OR(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3][1]))
+        elif op == 'and':
+            Instruction.AND(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]), int(Reg.IR[i][3][1]))
+        elif op == 'sll':
+            Instruction.SLL(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]))
+        elif op == 'srl':
+            Instruction.SRL(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]))
+        elif op == 'sra':
+            Instruction.SRA(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]))
+        elif op == 'csrrw':
+            Instruction.CSRRW(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]))
+        elif op == 'csrrs':
+            Instruction.CSRRS(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]))
+        elif op == 'csrrc':
+            Instruction.CSRRC(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]))
+        elif op == 'csrrwi':
+            Instruction.CSRRWI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2]))
+        elif op == 'csrrsi':
+            Instruction.CSRRSI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2]))
+        elif op == 'csrrci':
+            Instruction.CSRRCI(int(Reg.IR[i][1][1]), int(Reg.IR[i][2]))
+        elif op == 'fence':
+            Instruction.FENCE(int(Reg.IR[i][1][1]), int(Reg.IR[i][2][1]),
+                              int(Reg.IR[i][3][1]), int(Reg.IR[i][4][1]))
+        elif op == 'fence.i':
+            Instruction.FENCE_I()
+        elif op == 'ecall':
+            Instruction.ECALL()
+        elif op == 'fence.i':
+            Instruction.EBREAK()
+    return
+
+
+if __name__ == '__main__':
+    # 初始化内存
+    init_memory()
+    # print(Mem.Memory)
+    # 输入指令
+    get_instruction()
+    print(Reg.IR)
+
+    # 开始运行程序
+    run()
+
+    # 输出结果
+    print(Mem.Memory)
+    # print(Reg.PC)
+    print(Reg.Register)
